@@ -21,6 +21,8 @@ public class Author {
     @Column(name = "profile_picture")
     private String photo_url;
 
-
+    @ManyToOne
+    @JoinColumn(name = "genre_id")
+    private Genre genre;
 
 }
