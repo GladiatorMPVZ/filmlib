@@ -16,7 +16,7 @@ public class Author {
     private Long id;
 
     @Column(name = "author_name")
-    private String username;
+    private String name;
 
     @Column(name = "profile_picture")
     private String photo_url;
