@@ -3,14 +3,12 @@ package com.omega.filmlib.Entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "films")
 @Data
-@NoArgsConstructor
 public class Films {
 
     @Id
@@ -30,9 +28,16 @@ public class Films {
     @Column(name = "film_picture")
     private String film_picture_url;
 
+    @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "films", orphanRemoval = true)
+    private List<Rating> comments = new ArrayList<>();
+
     @ManyToOne
     @JoinColumn(name = "genre_id")
     private Genre genre;
+
+    public Films() {
+    }
+
 
     @ManyToMany
     @JoinTable(
