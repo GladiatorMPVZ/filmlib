@@ -1,7 +1,7 @@
 package com.omega.filmlib.Entity;
 
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;

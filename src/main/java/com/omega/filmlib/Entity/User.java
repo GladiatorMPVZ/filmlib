@@ -2,7 +2,7 @@ package com.omega.filmlib.Entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.omega.filmlib.Entity.Enums.ERole;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

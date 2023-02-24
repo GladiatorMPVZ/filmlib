@@ -1,7 +1,7 @@
 package com.omega.filmlib.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 public class ImageModel {
 
