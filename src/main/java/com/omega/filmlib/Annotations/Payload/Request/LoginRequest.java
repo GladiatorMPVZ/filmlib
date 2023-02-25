@@ -1,4 +1,4 @@
-package com.omega.filmlib.Payload.Request;
+package com.omega.filmlib.Annotations.Payload.Request;
 
 import lombok.Data;
 

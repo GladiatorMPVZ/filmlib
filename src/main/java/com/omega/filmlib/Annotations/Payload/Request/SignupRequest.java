@@ -1,4 +1,4 @@
-package com.omega.filmlib.Payload.Request;
+package com.omega.filmlib.Annotations.Payload.Request;
 
 import com.omega.filmlib.Annotations.PasswordMatches;
 import com.omega.filmlib.Annotations.ValidEmail;

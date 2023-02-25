@@ -2,16 +2,14 @@ package com.omega.filmlib.Services;
 import com.omega.filmlib.Entity.Enums.ERole;
 import com.omega.filmlib.Entity.User;
 import com.omega.filmlib.Exceptions.UserExistenceException;
-import com.omega.filmlib.Payload.Request.SignupRequest;
+import com.omega.filmlib.Annotations.Payload.Request.SignupRequest;
 import com.omega.filmlib.Repository.UserRepository;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Optional;
 
 @Service

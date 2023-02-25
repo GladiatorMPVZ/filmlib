@@ -1,7 +1,7 @@
 package com.omega.filmlib.Validations;
 
 import com.omega.filmlib.Annotations.PasswordMatches;
-import com.omega.filmlib.Payload.Request.SignupRequest;
+import com.omega.filmlib.Annotations.Payload.Request.SignupRequest;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

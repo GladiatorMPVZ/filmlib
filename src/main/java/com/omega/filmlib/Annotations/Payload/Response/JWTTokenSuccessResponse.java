@@ -1,4 +1,4 @@
-package com.omega.filmlib.Payload.Response;
+package com.omega.filmlib.Annotations.Payload.Response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
