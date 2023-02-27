@@ -1,58 +1,74 @@
 package com.omega.filmlib.Controller;
 
-import com.example.soyzspring.Dto.RegisterUserDto;
-import com.omega.filmlib.Exceptions.AppErrorException;
+import com.omega.filmlib.Annotations.Payload.Request.LoginRequest;
+import com.omega.filmlib.Annotations.Payload.Request.SignupRequest;
+import com.omega.filmlib.Annotations.Payload.Response.JWTTokenSuccessResponse;
+import com.omega.filmlib.Annotations.Payload.Response.MessageResponse;
 import com.omega.filmlib.Services.UserService;
-import com.omega.filmlib.Sucurity.JwtRequest;
-import com.omega.filmlib.Sucurity.JwtResponse;
+import com.omega.filmlib.Sucurity.JWTTokenProvider;
 import com.omega.filmlib.Sucurity.JwtTokenUtil;
-import com.omega.filmlib.Entity.User;
+import com.omega.filmlib.Sucurity.SecurityConstants;
+import com.omega.filmlib.Validations.ResponseErrorValidation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.ObjectUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.security.Principal;
 
+@CrossOrigin
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/auth")
+@PreAuthorize("permitAll()")
 public class AuthController {
-    private final UserService userService;
-    private final JwtTokenUtil jwtTokenUtil;
-    private final AuthenticationManager authenticationManager;
-    private final PasswordEncoder passwordEncoder;
 
-    @PostMapping("/auth/")
-    public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authRequest) {
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
-        } catch (BadCredentialsException e) {
-            return new ResponseEntity<>(new AppErrorException(HttpStatus.UNAUTHORIZED.value(), "Некорректный логин или пароль"), HttpStatus.UNAUTHORIZED);
-        }
-        UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
-        String token = jwtTokenUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new JwtResponse(token));
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private JWTTokenProvider jwtTokenProvider;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private ResponseErrorValidation responseErrorValidation;
+    @Autowired
+    private UserService userService;
+
+    @PostMapping("/signin")
+    public ResponseEntity<Object> authenticateUser(@Valid @RequestBody LoginRequest loginRequest, BindingResult bindingResult) {
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                loginRequest.getUsername(),
+                loginRequest.getPassword()
+        ));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = SecurityConstants.TOKEN_PREFIX + jwtTokenProvider.generateToken(authentication);
+
+        return ResponseEntity.ok(new JWTTokenSuccessResponse(true, jwt));
+
     }
 
-    @PostMapping("/registration/")
-    public ResponseEntity<?> registrationUser(@RequestBody RegisterUserDto registerUserDto) {
-        if (!registerUserDto.getPassword().equals(registerUserDto.getConfirmPassword())) {
-            return new ResponseEntity<>(new AppErrorException(HttpStatus.BAD_REQUEST.value(), "Пароли не совпадают"), HttpStatus.BAD_REQUEST);
-        }
-        if (userService.findByUsername(registerUserDto.getUsername()).isPresent()) {
-            return new ResponseEntity<>(new AppErrorException(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким именем уже существует"), HttpStatus.BAD_REQUEST);
-        }
-        User user = new User();
-        user.setUsername(registerUserDto.getUsername());
-        user.setPassword(passwordEncoder.encode(registerUserDto.getPassword()));
-        userService.createUser(user);
-        return ResponseEntity.ok(HttpStatus.ACCEPTED);
+
+    @PostMapping("/signup")
+    public ResponseEntity<Object> registerUser(@Valid @RequestBody SignupRequest signupRequest, BindingResult bindingResult) {
+        ResponseEntity<Object> errors = responseErrorValidation.mapValidationService(bindingResult);
+        if (!ObjectUtils.isEmpty(errors)) return errors;
+
+        userService.createUser(signupRequest);
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
+
 }
 

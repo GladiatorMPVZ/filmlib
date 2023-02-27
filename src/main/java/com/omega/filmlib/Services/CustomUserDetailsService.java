@@ -20,6 +20,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    /*public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }*/
+
+    /*public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }*/
+
     @Override
     public UserDetails loadUserByUsername(String username) {
         User user = userRepository.findUserByEmail(username)
