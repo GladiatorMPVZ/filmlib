@@ -31,7 +31,7 @@ public class User implements UserDetails {
     @Column(name = "bio")
     private String bio;
 
-    @Column(length = 30)
+    @Column(length = 100)
     private String password;
 
     @ElementCollection(targetClass = ERole.class)

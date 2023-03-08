@@ -32,6 +32,7 @@ public class SucurityConfig extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/v1/devices").authenticated()
 //                .antMatchers("/api/v1/vaporizers").authenticated()
                 .antMatchers(SecurityConstants.SIGN_UP_URLS).permitAll()
+                .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -29,7 +29,7 @@ public class Films {
     private String film_picture_url;
 
     @OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "films", orphanRemoval = true)
-    private List<Rating> comments = new ArrayList<>();
+    private List<Rating> user_ratings = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "genre_id")

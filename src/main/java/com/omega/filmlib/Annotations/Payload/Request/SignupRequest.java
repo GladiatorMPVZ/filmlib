@@ -19,7 +19,7 @@ public class SignupRequest {
     @NotBlank(message = "Please enter your email")
     @ValidEmail
     private String email;
-    @Size(min = 30)
+    @Size(min = 100)
     @NotEmpty(message = "Password is required")
     private String password;
     private String confirmPassword;

@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "ratings")
 @Data
 public class Rating {
 
@@ -22,7 +23,7 @@ public class Rating {
     @Column(nullable = false)
     private Long userId;
 
-    @Column(columnDefinition = "rating", nullable = false)
+    @Column(name = "rating", nullable = false)
     private Integer rating;
 
     @Column(updatable = false)
