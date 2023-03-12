@@ -86,5 +86,17 @@ public class AuthController {
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
+    @PostMapping("/registration/")
+    public ResponseEntity<?> registrationUser(@RequestBody SignupRequest signupRequest) {
+        if (!signupRequest.getPassword().equals(signupRequest.getConfirmPassword())) {
+            return new ResponseEntity<>(new AppErrorException(HttpStatus.BAD_REQUEST.value(), "Пароли не совпадают"), HttpStatus.BAD_REQUEST);
+        }
+        if (userService.findByUsername(signupRequest.getUsername()).isPresent()) {
+            return new ResponseEntity<>(new AppErrorException(HttpStatus.BAD_REQUEST.value(), "Пользователь с таким именем уже существует"), HttpStatus.BAD_REQUEST);
+        }
+        userService.createUser(signupRequest);
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
 }
 

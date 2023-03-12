@@ -41,7 +41,7 @@ public class UserService {
             return userRepository.save(user);
         } catch (Exception e) {
             LOG.error("Error during registration. {}",e.getMessage());
-            throw new UserExistenceException("The user" + userIn.getUsername() + "already exist. Please check ypur credentials");
+            throw new UserExistenceException("The user" + userIn.getUsername() + "already exist. Please check your credentials");
         }
 
 
